@@ -1,0 +1,19 @@
+{
+  "name": "bls_prt",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js "
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "googleapis": "^137.1.0",
+    "proxy-chain": "^2.4.0",
+    "puppeteer": "^22.9.0",
+    "puppeteer-bandwidth-calculator": "^1.0.0"
+  }
+}
