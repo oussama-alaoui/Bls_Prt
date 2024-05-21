@@ -9,6 +9,6 @@ export class Worker extends Parent {
         console.log("start process for user: ", this.object.id);
         await this.Login();
         const slot = await this.VisaType();
-        return true;
+        return slot;
     }
 }

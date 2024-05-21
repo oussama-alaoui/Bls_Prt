@@ -1,10 +1,11 @@
 import { captchaProcess } from "./CaptchaProcess.js";
 import { checkSlot } from "./Api.js";
+import moment from 'moment';
 
 // Login Helper Functions
 export async function GetDataLogin(page) {
 const data = {}
-
+console.log('Getting data for login:', moment().format('HH:mm:ss'));
 // get the id from the input field and store it in the data object
 data.CaptchaId = await page.$eval('input[name="CaptchaId"]', el => el.value);
 data.ScriptData = await page.$eval('input[name="ScriptData"]', el => el.value);
@@ -111,15 +112,15 @@ export async function prepareData(page, ids) {
             if (await divElement.$('input')) {
                 const name = await divElement.$eval('input', el => el.getAttribute('name'));
                 if(name.includes("Location")){
-                    body[name] = "8d780684-1524-4bda-b138-7c71a8591944";
+                    body[name] = ids.locationId;
                     body.location = name
                 }
                 else if(name.includes("VisaType")){
-                    body[name] = "084cd40f-c448-475e-8873-6b5eff2e01bf"
+                    body[name] = ids.visaTypeId;
                     body.type = name
                 }
                 else if(name.includes("VisaSubType")){
-                    body[name] = "e70cc749-5b1e-457f-b664-f27a05082aaf"
+                    body[name] = ids.visaSubTypeId;
                     body.subType = name
                 }
                 else if(name.includes("AppointmentCategoryId")){
@@ -145,25 +146,175 @@ export async function prepareData(page, ids) {
 }
 
 export async function Slotprocess(page, browser, retry = 0, ids) {
-    try{
+    try {
         var res = await captchaProcess(page, browser, 'https://morocco.blsportugal.com/MAR/NewCaptcha/GenerateCaptcha', 'verify', '/MAR/NewCaptcha/SubmitCaptcha');
         const url = await getUrl(page, res.cd);
         await page.goto(`https://morocco.blsportugal.com${url.returnUrl}`);
         const slot = await checkSlot(page, url.returnUrl, ids);
-        if(slot.available == true){
-            console.log("Slot available")
+        if (slot.available == true) {
+            console.log("Slot available");
             return slot;
-        }
-        else {
-            console.log("Slot not available: ", retry, "Retry in 30 seconds", "data: ", slot)
+        } else {
+            console.log("Slot not available: ", retry, "Retry in 30 seconds", "data: ", slot);
             retry++;
-            setTimeout(() => {
-                Slotprocess(page, browser, retry, ids);
-            }, 30000);
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            return await Slotprocess(page, browser, retry, ids);
         }
+    } catch (error) {
+        console.log('Error in Slotprocess:', error);
+        // Handle the error as needed
+        throw error; // Rethrow the error to stop further execution
+    }
+}
+
+// Calendar Helper Functions
+export async function getDate(page) {
+    try {
+        const date = await page.evaluate(async () => {
+            var alloweDates = await availDates.ad.filter(x => x.SingleSlotAvailable === true);
+            return alloweDates
+        });
+        return date;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+}
+
+async function getAllInput(page, body) {
+    try {
+        const data = await page.evaluate(async (body) => {
+            const data = {};
+            document.querySelectorAll('input').forEach((inputElement) => {
+                if (inputElement.type === 'hidden') {
+                    data[inputElement.name] = inputElement.value;
+                }
+            })
+            return data;
+        }, body);
+        return data;
     }
     catch (error) {
-        console.log('Error in Slotprocess:', error);
-        // Slotprocess(page, browser);
+        console.error('Error:', error);
+    }
+}
+
+export async function CalendarprepareData(page, captchadata, date, slot, otp) {
+    try {
+        var data = await page.evaluate(async (date, slot) => {
+            const data = {};
+            var divElements = document.querySelectorAll('.col-md-3');
+            divElements = Array.from(divElements).filter(function(element) {
+                return window.getComputedStyle(element).display === 'block';
+            });
+            divElements.forEach((divElement) => {
+                if (divElement.querySelector('input') === null) {
+                    return;
+                }
+                const inputName = divElement.querySelector('input').name;
+                data[inputName] = divElement.querySelector('input').value;
+                if(inputName.includes('AppointmentDate'))
+                    data[inputName] = date.DateText;
+                else if(inputName.includes('AppointmentSlot'))
+                    data[inputName] = slot.Name;
+            });
+            return data;
+        }, date, slot);
+        data = { ...data, ...await getAllInput(page, data) };
+        data.CaptchaData = captchadata;
+        data.ApplicantPhotoId = 'f3557f5b-ad75-4747-bf36-41439587a9b5'
+        data.EmailVerificationCode = otp;
+        data.ServerAppointmentDate = date.DateText;
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function initScrptData(page) {
+    try {
+        var id =''
+        var captchadata = '';
+        var otpcode = '';
+        var url = '';
+        var scriptContent = await page.evaluate(() => {
+            return Array.from(document.scripts).map(script => script.innerHTML);
+        });
+        scriptContent.forEach(script => {
+            if(script.includes("function OnAppointmentdateChange()"))
+                id = script.split('OnAppointmentdateChange')[1].split('Id:')[2].split('\n')[0]
+        })
+        scriptContent.forEach(script => {
+            if(script.includes("function VerifyAppointment"))
+                captchadata = script.split('win.iframeOpenUrl = \'')[1].split('\';')[0]
+        })
+        scriptContent.forEach(script => {
+            if(script.includes("function RequestCode"))
+                otpcode = script.split('/MAR/blsappointment/savc')[1].split('",')[0]
+        })
+        scriptContent.forEach(script => {
+        if(script.includes("onAjaxSuccess = function (res)"))
+            url = script.split('vaf/')[1].split('?')[0]
+        })
+        return {id, captchadata, otpcode, url, scriptContent};
+    }
+    catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Applicant Helper Functions
+export async function OnApplicationSubmit(page, UserData) {
+    const applicantsCount = await page.evaluate(() => {
+        return applicantsCount;
+    });
+
+    const ApplicantsData = [];
+    for (let j = 0; j < applicantsCount; j++) {
+        ApplicantsData[j] = {};
+        if (j > 0) {
+            ApplicantsData[j]["Relationship"] = await page.$eval(`#Relationship_${j}`, input => input.value);
+        }
+        ApplicantsData[j]["ApplicantSerialNo"] = (j+1).toString();
+        ApplicantsData[j]["FirstName"] = UserData.FirstName;
+        ApplicantsData[j]["LastName"] = UserData.LastName;
+        ApplicantsData[j]["ServerDateOfBirth"] = moment(UserData.DateOfBirth, 'YYYY-MM-DD').format('YYYY-MM-DD');
+        ApplicantsData[j]["PlaceOfBirth"] = UserData.PlaceOfBirth;
+        ApplicantsData[j]["NationalityId"] = UserData.NationalityId;
+        ApplicantsData[j]["PassportType"] = UserData.PassportType;
+        ApplicantsData[j]["PassportNo"] = UserData.PassportNo;
+        ApplicantsData[j]["ServerPassportIssueDate"] = moment(UserData.IssueDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+        ApplicantsData[j]["ServerPassportExpiryDate"] = moment(UserData.ExpiryDate, 'YYYY-MM-DD').format('YYYY-MM-DD');
+        ApplicantsData[j]["IssuePlace"] = UserData.IssuePlace;
+        ApplicantsData[j]["IssueCountryId"] = UserData.IssueCountryId;
+        ApplicantsData[j]["ParentId"] = "acc4b680-d317-40b8-b07c-bd8d21f02038";
+        ApplicantsData[j]["ApplicantId"] = await page.$eval(`#ApplicantId_${j}`, input => input.value);
+        ApplicantsData[j]["Id"] = await page.$eval(`#ApplicantId_${j}`, input => input.value);
+    }
+    return ApplicantsData;
+}
+
+export async function ApplicantprepareData(page) {
+    try {
+        var data = await page.evaluate(async () => {
+            const data = {};
+            var divElements = document.querySelectorAll('.col-md-3');
+            divElements = Array.from(divElements).filter(function(element) {
+                return window.getComputedStyle(element).display === 'block';
+            });
+            divElements.forEach((divElement) => {
+                if (divElement.querySelector('input') === null) {
+                    return;
+                }
+                const inputName = divElement.querySelector('input').name;
+                data[inputName] = "";
+            });
+            return data;
+        });
+        // data = await setValues(data);
+        data = { ...data, ...await getAllInput(page, data) };
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
     }
 }

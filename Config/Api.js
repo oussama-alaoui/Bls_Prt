@@ -1,4 +1,5 @@
 import { prepareData } from "./Tools.js";
+
 export async function login_request(page, data, captcha, UserData) {
     try {
         const body = {
@@ -24,7 +25,6 @@ export async function login_request(page, data, captcha, UserData) {
         }, body);
        if(login.success === false){
            console.log("Login failed, retrying");
-           return await Login_V2(page, browser, UserData);
        }
        return login;
     } catch (error) {
@@ -32,8 +32,8 @@ export async function login_request(page, data, captcha, UserData) {
     }
 }
 
-export async function checkSlot(page, url) {
-    const body = await prepareData(page);
+export async function checkSlot(page, url, ids) {
+    const body = await prepareData(page, ids);
     const res = await page.evaluate(async (body, url) => {
         try {
             const res = await fetch(`https://morocco.blsportugal.com${url}`, {
@@ -66,4 +66,132 @@ export async function checkSlot(page, url) {
         }
     }, body, url);
     return res;
+}
+
+export async function requestOtp(page, otpcode) {
+    try {
+        await page.evaluate(async (otpcode) => {
+            const response = await fetch('https://morocco.blsportugal.com/MAR/blsappointment/savc'+otpcode, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            });
+            return response;
+        }, otpcode);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function verifyOtp(page, scriptContent, otp) {
+    try {
+        var value = '';
+        var id = await page.$eval('input[name="Id"]', el => el.value);
+        scriptContent.forEach(script => {
+            if(script.includes("function VerifyEmailCode")){
+                value = script.split('Value: \'')
+                value = value[value.length-1].split('\',')[0]
+            }
+        })
+        const res = await page.evaluate(async (otp, value, id) => {
+            const response = await fetch('https://morocco.blsportugal.com/MAR/blsappointment/VerifyEmailForAppointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    "requestverificationtoken": document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: new URLSearchParams({ Code: otp, Value: value, Id: id })
+            });
+            return response;
+        }, otp, value, id);
+        console.log(res);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function Calendareq(page, data) {
+    try {
+        const url = await page.evaluate(() => {
+            return document.querySelector('form').action;
+        }
+        );
+        const response = await page.evaluate(async (data, url) => {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data)
+            });
+            return response.json();
+        }, data, url);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function getSlot(page, date, id) {
+    try {
+        const body = {
+            LocationId: await page.$eval('input[name="LocationId"]', el => el.value),
+            AppointmentCategoryId: await page.$eval('input[name="AppointmentCategoryId"]', el => el.value),
+            AppointmentDate: date.DateText,
+            ApplicantsNo: "1",
+            VisaType: await page.$eval('input[name="VisaType"]', el => el.value),
+            VisaSubType: await page.$eval('input[name="VisaSubTypeId"]', el => el.value),
+            MissionId: await page.$eval('input[name="MissionId"]', el => el.value),
+            DataSource: "WEB_BLS",
+            CaptchaData2: await page.$eval('input[name="CaptchaData2"]', el => el.value),
+            Id: id.replace(/['"]+/g, ''),
+        };
+
+        const RequestVerificationToken = await page.evaluate(() => {
+            return document.querySelector('input[name="__RequestVerificationToken"]').value;
+        });
+
+        const response = await page.evaluate(async (body, cookieValue) => {
+            const res = await fetch(`https://morocco.blsportugal.com/MAR/blsappointment/gasd4443`, {
+                method: 'POST',
+                headers: {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "accept-language": "en-US,en;q=0.5",
+                    "requestverificationtoken": cookieValue,
+                },
+                body: new URLSearchParams(body),
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to fetch. Status: ${res.status}`);
+            }
+
+            return res.json();
+        }, body, RequestVerificationToken);
+        const slots = response.filter(slot => slot.Count >= 1);
+        return slots;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function Applicantreq(page, data, path) {
+    try {
+        const response = await page.evaluate(async (data, path) => {
+            const response = await fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data)
+            });
+            return response.json();
+        }, data, path);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }

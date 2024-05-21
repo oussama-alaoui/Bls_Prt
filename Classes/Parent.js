@@ -5,6 +5,7 @@ import
         Slotprocess
     } from "../Config/Tools.js";
 import { SolveCaptcha } from "../Config/BaypassCaptcha.js";
+import { getEmailContent } from "../Config/scriptVirify.js";
 import { login_request } from "../Config/Api.js";
 
 export class Parent {
@@ -37,6 +38,7 @@ export class Parent {
             if (res.success === false)
                 return await this.Login(this.page, this.browser, this.object);
             await login_request(this.page, data, res.captcha, this.object);
+            // await getEmailContent(this.object.email, "url", this.page);
             console.log("Login success for user: ", this.object.id);
         }
         catch (error) {
