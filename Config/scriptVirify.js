@@ -156,4 +156,4 @@ export async function getEmailContent(account, type) {
 	}
 }
 
-// getEmailContent("bls_prt_wrk_00012@schngn.33mail.com","url")
+// getEmailContent("bls_prt_wrk_00013@schngn.33mail.com","url")

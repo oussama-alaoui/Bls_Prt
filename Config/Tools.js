@@ -222,7 +222,7 @@ export async function CalendarprepareData(page, captchadata, date, slot, otp) {
         }, date, slot);
         data = { ...data, ...await getAllInput(page, data) };
         data.CaptchaData = captchadata;
-        data.ApplicantPhotoId = 'f3557f5b-ad75-4747-bf36-41439587a9b5'
+        data.ApplicantPhotoId = '74a44fc0-57d1-4f11-b797-6b445fd02f06'
         data.EmailVerificationCode = otp;
         data.ServerAppointmentDate = date.DateText;
         return data;
@@ -318,3 +318,18 @@ export async function ApplicantprepareData(page) {
         console.error('Error:', error);
     }
 }
+
+// Video Verification Helper Functions
+
+function generateFakeCameraLabel() {
+    // Generate a random camera label in a format similar to real data
+    const manufacturer = ['Canon', 'Nikon', 'Sony', 'Fujifilm', 'Olympus'];
+    const modelPrefix = ['EOS', 'DSC', 'Alpha', 'FinePix', 'OM-D'];
+    const modelNumber = Math.floor(Math.random() * 1000) + 1000; // Generate a 4-digit number
+    const serialNumber = Math.floor(Math.random() * 100000) + 100000; // Generate a 6-digit number
+
+    const fakeCameraLabel = `${manufacturer[Math.floor(Math.random() * manufacturer.length)]} ${modelPrefix[Math.floor(Math.random() * modelPrefix.length)]}-${modelNumber}-${serialNumber}`;
+
+    return fakeCameraLabel;
+}
+

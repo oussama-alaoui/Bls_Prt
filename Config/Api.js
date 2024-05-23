@@ -195,3 +195,30 @@ export async function Applicantreq(page, data, path) {
         console.error('Error:', error);
     }
 }
+
+export async function VerifyVideo(page, formData) {
+    try {
+      const response = await page.evaluate(async (formData) => {
+        const formDataWithBlobs = new FormData();
+        formDataWithBlobs.append('Id', formData.Id);
+        formDataWithBlobs.append('ApplicantPhotoId', formData.ApplicantPhotoId);
+        formDataWithBlobs.append('__RequestVerificationToken', formData.__RequestVerificationToken);
+        formDataWithBlobs.append('image1', formData.image1); // Use Blob directly
+        formDataWithBlobs.append('image2', formData.image2); // Use Blob directly
+        formDataWithBlobs.append('cameraLabel', "camera");
+        formDataWithBlobs.append('isMobile', false);
+        formDataWithBlobs.append('appointmentId', formData.appointmentId);
+  
+        const response = await fetch('https://morocco.blsportugal.com/MAR/blsappointment/SubmitLivenessDetection', {
+          method: 'POST',
+          body: formDataWithBlobs,
+        });
+        return response.text();
+      }, formData);
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
