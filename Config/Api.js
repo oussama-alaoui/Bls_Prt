@@ -1,4 +1,7 @@
 import { prepareData } from "./Tools.js";
+import { exec } from 'child_process';
+import { createCanvas, loadImage } from 'canvas';
+import fs from 'fs'
 
 export async function login_request(page, data, captcha, UserData) {
     try {
@@ -199,19 +202,40 @@ export async function Applicantreq(page, data, path) {
 export async function VerifyVideo(page, formData) {
     try {
       const response = await page.evaluate(async (formData) => {
+        // Convert buffer data to Blob
+        const image2res = await fetch("https://i.postimg.cc/8PRHYFph/image2.png");
+        const image1res = await fetch("https://i.postimg.cc/T2HQm8kD/image1.png");
+        const image1Blob = await image1res.blob();
+        const image2Blob = await image2res.blob();
+        console.log('Blob created for image1:', image1Blob);
+        console.log('Blob created for image2:', image2Blob);
         const formDataWithBlobs = new FormData();
         formDataWithBlobs.append('Id', formData.Id);
         formDataWithBlobs.append('ApplicantPhotoId', formData.ApplicantPhotoId);
         formDataWithBlobs.append('__RequestVerificationToken', formData.__RequestVerificationToken);
-        formDataWithBlobs.append('image1', formData.image1); // Use Blob directly
-        formDataWithBlobs.append('image2', formData.image2); // Use Blob directly
+        formDataWithBlobs.append('image1', image1Blob); // Append Blob directly
+        formDataWithBlobs.append('image2', image2Blob); // Append Blob directly
         formDataWithBlobs.append('cameraLabel', "camera");
         formDataWithBlobs.append('isMobile', false);
         formDataWithBlobs.append('appointmentId', formData.appointmentId);
-  
-        const response = await fetch('https://morocco.blsportugal.com/MAR/blsappointment/SubmitLivenessDetection', {
-          method: 'POST',
-          body: formDataWithBlobs,
+        const response = await fetch("https://morocco.blsportugal.com/MAR/blsappointment/SubmitLivenessDetection", {
+            method: "POST",
+            headers: {
+              "accept": "*/*",
+              "accept-language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            //   "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryj4SRqaYcL4gLccPY",
+              "priority": "u=1, i",
+              "sec-ch-ua": "\"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
+              "sec-ch-ua-mobile": "?0",
+              "sec-ch-ua-platform": "\"Linux\"",
+              "sec-fetch-dest": "empty",
+              "sec-fetch-mode": "cors",
+              "sec-fetch-site": "same-origin"
+            },
+            body: formDataWithBlobs,
+            mode: "cors",
+            // referrer: "https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=a342d5d2-911d-48cb-8ef0-aca13d90656b&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f",
+            referrerPolicy: "strict-origin-when-cross-origin"
         });
         return response.text();
       }, formData);

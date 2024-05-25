@@ -7,7 +7,7 @@ import { Worker } from "./Classes/Worker.js";
 import { Waiter } from "./Classes/Waiter.js";
 var UserData =     
 {
-    id: 1,
+    id: 3,
     email: "bls_prt_wrk_00009@schngn.33mail.com",
     counter: 9,
     password: "120345",
@@ -23,7 +23,7 @@ var UserData =
     PassportType: "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
     IssueCountryId: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72"
 };
-
+// 0b765049-47ac-4dcf-a4c7-7e8aac77640e
 async function initBowser(){
     const proxyUrl = 'http://rotating.proxyempire.io:9059';
     const newProxyUrl = await ProxyChain.anonymizeProxy(proxyUrl);
@@ -43,7 +43,7 @@ async function initBowser(){
     await page.setRequestInterception(true);
     page.on('request', interceptedRequest => {
         if (interceptedRequest.isInterceptResolutionHandled()) return;
-        if (['image', 'stylesheet', 'font', 'script'].indexOf(interceptedRequest.resourceType()) !== -1)
+        if (['stylesheet', 'font', 'image'].indexOf(interceptedRequest.resourceType()) !== -1)
             interceptedRequest.abort();
         else {
             interceptedRequest.continue();

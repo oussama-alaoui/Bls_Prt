@@ -14,8 +14,7 @@ import { requestOtp,
     VerifyVideo
 } from "../Config/Api.js";
 
-import { analyzeMotion } from "../Config/video.js";
-
+import { imageToBlob } from "../Config/video.js";
 import { captchaProcess } from "../Config/CaptchaProcess.js";
 import { getEmailContent } from "../Config/Otp.js";
 
@@ -25,13 +24,15 @@ export class Waiter extends Parent {
     }
 
     async start() {
-        this.images = await analyzeMotion()
+        // this.images = await analyzeMotion()
+        // console.log("this.images: ", this.images);
         await this.Login();
         const slot = await this.VisaType();
         this.path = `https://morocco.blsportugal.com${slot.returnUrl}`;
         await this.Calendar();
         await this.Applicant();
         await this.VideoVerification();
+        // await this.fetchData();
     }
 
     async Calendar() {
@@ -101,25 +102,26 @@ export class Waiter extends Parent {
 //   }
     async VideoVerification(){
         try{
-            var id, img;
             await this.page.goto(this.path);
             const id2 = await this.page.$eval('input[name="Id"]', el => el.value);
-            this.path = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=74a44fc0-57d1-4f11-b797-6b445fd02f06`;
+            this.path = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f`;
             console.log(this.path);
             await this.page.goto(this.path);
+
+            
             const ApplicantPhotoId = await this.page.$eval('input[name="ApplicantPhotoId"]', el => el.value);
             const __RequestVerificationToken = await this.page.$eval('input[name="__RequestVerificationToken"]', el => el.value);
-            var img1, img2;
-            const firstImageReader = new FileReader();
-            firstImageReader.readAsArrayBuffer(images.firstImageBlob);
-            firstImageReader.onload = () => {
-                img1 = firstImageReader.result;
-            };
-            const secondImageReader = new FileReader();
-            secondImageReader.readAsArrayBuffer(images.secondImageBlob);
-            secondImageReader.onload = () => {
-                img2 = secondImageReader.result;
-            };
+            const imagePath1 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image1.png";
+            const imagePath2 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image2.png";
+            
+            let img1, img2;
+            
+            imageToBlob(imagePath1)
+            img1 = await imageToBlob(imagePath1);
+            console.log('Blob created for image1:', img1);
+            img2 = await imageToBlob(imagePath2);
+            console.log('Blob created for image2:', img2);
+            // convert blob to binary file
             const data = {
                 Id: id2,
                 ApplicantPhotoId: ApplicantPhotoId,
@@ -130,12 +132,43 @@ export class Waiter extends Parent {
                 isMobile: false,
                 appointmentId: id2,
             };
-
+            console.log(data);
             const res = await VerifyVideo(this.page, data);
-            console.log(res);
+            console.log("res: ", res);
         }
         catch (error) {
             console.error('Error:', error);
         }
     }
+    // async fetchData(){
+    //     try{
+    //         const imagePath1 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image1.png";
+    //         const imagePath2 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image2.png";
+            
+    //         let img1, img2;
+            
+    //         imageToBlob(imagePath1)
+    //         img1 = await imageToBlob(imagePath1);
+    //         console.log('Blob created for image1:', img1);
+    //         img2 = await imageToBlob(imagePath2);
+    //         console.log('Blob created for image2:', img2);
+    //         const image1Blob = new Blob([new Uint8Array(img1)], { type: 'image/png' });
+    //         const image2Blob = new Blob([new Uint8Array(img2)], { type: 'image/png' });
+    //         console.log('Blob created for image1:', image1Blob);
+    //         console.log('Blob created for image2:', image2Blob);
+    //         const formDataWithBlobs = new FormData();
+    //         formDataWithBlobs.append('image1', img2, 'blob'); // Append Blob directly
+    //         formDataWithBlobs.append('image2', img1, 'blob'); // Append Blob directly
+    //         const res = await fetch("http://localhost:3000/api", {
+    //             method: "POST",
+    //             body: formDataWithBlobs,
+    //             mode: "cors",
+    //             credentials: "include",
+    //             // referrer: "https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=a342d5d2-911d-48cb-8ef0-aca13d90656b&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f",
+    //         });
+    //     }
+    //     catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // }
 }
