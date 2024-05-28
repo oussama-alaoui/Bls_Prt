@@ -201,48 +201,75 @@ export async function Applicantreq(page, data, path) {
 
 export async function VerifyVideo(page, formData) {
     try {
-      const response = await page.evaluate(async (formData) => {
-        // Convert buffer data to Blob
-        const image2res = await fetch("https://i.postimg.cc/8PRHYFph/image2.png");
-        const image1res = await fetch("https://i.postimg.cc/T2HQm8kD/image1.png");
-        const image1Blob = await image1res.blob();
-        const image2Blob = await image2res.blob();
-        console.log('Blob created for image1:', image1Blob);
-        console.log('Blob created for image2:', image2Blob);
-        const formDataWithBlobs = new FormData();
-        formDataWithBlobs.append('Id', formData.Id);
-        formDataWithBlobs.append('ApplicantPhotoId', formData.ApplicantPhotoId);
-        formDataWithBlobs.append('__RequestVerificationToken', formData.__RequestVerificationToken);
-        formDataWithBlobs.append('image1', image1Blob); // Append Blob directly
-        formDataWithBlobs.append('image2', image2Blob); // Append Blob directly
-        formDataWithBlobs.append('cameraLabel', "camera");
-        formDataWithBlobs.append('isMobile', false);
-        formDataWithBlobs.append('appointmentId', formData.appointmentId);
-        const response = await fetch("https://morocco.blsportugal.com/MAR/blsappointment/SubmitLivenessDetection", {
-            method: "POST",
-            headers: {
-              "accept": "*/*",
-              "accept-language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
-            //   "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryj4SRqaYcL4gLccPY",
-              "priority": "u=1, i",
-              "sec-ch-ua": "\"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
-              "sec-ch-ua-mobile": "?0",
-              "sec-ch-ua-platform": "\"Linux\"",
-              "sec-fetch-dest": "empty",
-              "sec-fetch-mode": "cors",
-              "sec-fetch-site": "same-origin"
-            },
-            body: formDataWithBlobs,
-            mode: "cors",
-            // referrer: "https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=a342d5d2-911d-48cb-8ef0-aca13d90656b&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f",
-            referrerPolicy: "strict-origin-when-cross-origin"
-        });
-        return response.text();
-      }, formData);
-      console.log(response);
-      return response;
+        const response = await page.evaluate(async (formData) => {
+            async function fetchImageAsBlob(url) {
+                try {
+                    const response = await fetch(url, { mode: 'cors' });
+                    if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
+                    return await response.blob();
+                } catch (error) {
+                    throw new Error(`Failed to fetch image from URL: ${url} with error: ${error.message}`);
+                }
+            }
+
+            const imageUrls = [
+                "https://i.postimg.cc/wv351nrH/image222.png",
+                "https://i.postimg.cc/HLY9gr4r/image111.png"
+            ];
+
+            try {
+                const image1res = await fetchImageAsBlob(imageUrls[1]);
+                const image2res = await fetchImageAsBlob(imageUrls[0]);
+
+                console.log('Blob created for image1:', image1res);
+                console.log('Blob created for image2:', image2res);
+
+                const formDataWithBlobs = new FormData();
+                formDataWithBlobs.append('Id', formData.Id);
+                formDataWithBlobs.append('ApplicantPhotoId', formData.ApplicantPhotoId);
+                formDataWithBlobs.append('__RequestVerificationToken', formData.__RequestVerificationToken);
+                formDataWithBlobs.append('image1', image1res, 'image1.png');
+                formDataWithBlobs.append('image2', image2res, 'image2.png');
+                formDataWithBlobs.append('PhotoId', '');
+                formDataWithBlobs.append('cameraLabel', "camera");
+                formDataWithBlobs.append('isMobile', false);
+                formDataWithBlobs.append('appointmentId', formData.appointmentId);
+
+                const response = await fetch("https://morocco.blsportugal.com/MAR/blsappointment/SubmitLivenessDetection", {
+                    method: "POST",
+                    body: formDataWithBlobs,
+                });
+
+                return response.text();
+            } catch (error) {
+                console.error('Failed to create blobs and submit form:', error);
+                throw error;
+            }
+        }, formData);
+
+        console.log('Response from form submission:', response);
+        return response;
     } catch (error) {
-      console.error('Error:', error);
+        console.error('Error in VerifyVideo:', error);
     }
-  }
+}
+
+export async function reqPr(page, data) {
+    try {
+        const response = await page.evaluate(async (data) => {
+            const response = await fetch('https://morocco.blsportugal.com/MAR/payment/pr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data)
+            });
+            return response.json();
+        }, data);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
   

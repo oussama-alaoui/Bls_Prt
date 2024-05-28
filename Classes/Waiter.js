@@ -11,7 +11,8 @@ import { requestOtp,
     getSlot, 
     Calendareq, 
     Applicantreq,
-    VerifyVideo
+    VerifyVideo,
+    reqPr
 } from "../Config/Api.js";
 
 import { imageToBlob } from "../Config/video.js";
@@ -32,14 +33,15 @@ export class Waiter extends Parent {
         await this.Calendar();
         await this.Applicant();
         await this.VideoVerification();
-        // await this.fetchData();
     }
 
     async Calendar() {
         try{
             await this.page.goto(this.path);
+            // return;
             const {id, captchadata, otpcode, url, scriptContent} = await initScrptData(this.page);
             await requestOtp(this.page, otpcode);
+            this.id1 = await this.page.$eval('input[name="Id1"]', el => el.value);
             await new Promise(resolve => setTimeout(resolve, 10000));
             var res = await captchaProcess(this.page, this.browser, 'https://morocco.blsportugal.com'+captchadata, 'login', '/MAR/CaptchaPublic/SubmitCaptcha');
             this.otp = await getEmailContent(this.object.email, new Date());
@@ -102,15 +104,19 @@ export class Waiter extends Parent {
 //   }
     async VideoVerification(){
         try{
+            this.page2 = await this.browser.newPage();
             await this.page.goto(this.path);
             const id2 = await this.page.$eval('input[name="Id"]', el => el.value);
-            this.path = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f`;
+            this.path = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=0b765049-47ac-4dcf-a4c7-7e8aac77640e`;
             console.log(this.path);
-            await this.page.goto(this.path);
-
+            var serviceId = await this.page.evaluate(() => {
+                return document.querySelectorAll('.vac-check')[8].id.slice(4)
+            })
+            await this.page.goto(this.path, {waitUntil: 'networkidle2'});
             
-            const ApplicantPhotoId = await this.page.$eval('input[name="ApplicantPhotoId"]', el => el.value);
+            
             const __RequestVerificationToken = await this.page.$eval('input[name="__RequestVerificationToken"]', el => el.value);
+            const ApplicantPhotoId = await this.page.$eval('input[name="ApplicantPhotoId"]', el => el.value);
             const imagePath1 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image1.png";
             const imagePath2 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image2.png";
             
@@ -118,11 +124,9 @@ export class Waiter extends Parent {
             
             imageToBlob(imagePath1)
             img1 = await imageToBlob(imagePath1);
-            console.log('Blob created for image1:', img1);
             img2 = await imageToBlob(imagePath2);
-            console.log('Blob created for image2:', img2);
             // convert blob to binary file
-            const data = {
+            var data = {
                 Id: id2,
                 ApplicantPhotoId: ApplicantPhotoId,
                 __RequestVerificationToken: __RequestVerificationToken,
@@ -132,43 +136,17 @@ export class Waiter extends Parent {
                 isMobile: false,
                 appointmentId: id2,
             };
-            console.log(data);
             const res = await VerifyVideo(this.page, data);
-            console.log("res: ", res);
+            data = {
+                Id1: this.id1,
+                ServiceId: `${serviceId}_1`,
+                Id: id2,
+            }
+            console.log(data);
+            res = await reqPr(this.page, data);
         }
         catch (error) {
             console.error('Error:', error);
         }
     }
-    // async fetchData(){
-    //     try{
-    //         const imagePath1 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image1.png";
-    //         const imagePath2 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image2.png";
-            
-    //         let img1, img2;
-            
-    //         imageToBlob(imagePath1)
-    //         img1 = await imageToBlob(imagePath1);
-    //         console.log('Blob created for image1:', img1);
-    //         img2 = await imageToBlob(imagePath2);
-    //         console.log('Blob created for image2:', img2);
-    //         const image1Blob = new Blob([new Uint8Array(img1)], { type: 'image/png' });
-    //         const image2Blob = new Blob([new Uint8Array(img2)], { type: 'image/png' });
-    //         console.log('Blob created for image1:', image1Blob);
-    //         console.log('Blob created for image2:', image2Blob);
-    //         const formDataWithBlobs = new FormData();
-    //         formDataWithBlobs.append('image1', img2, 'blob'); // Append Blob directly
-    //         formDataWithBlobs.append('image2', img1, 'blob'); // Append Blob directly
-    //         const res = await fetch("http://localhost:3000/api", {
-    //             method: "POST",
-    //             body: formDataWithBlobs,
-    //             mode: "cors",
-    //             credentials: "include",
-    //             // referrer: "https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=a342d5d2-911d-48cb-8ef0-aca13d90656b&applicantPhotoId=f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f",
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // }
 }

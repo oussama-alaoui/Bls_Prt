@@ -222,7 +222,8 @@ export async function CalendarprepareData(page, captchadata, date, slot, otp) {
         }, date, slot);
         data = { ...data, ...await getAllInput(page, data) };
         data.CaptchaData = captchadata;
-        data.ApplicantPhotoId = 'f6da4d9d-3b20-47c3-83a1-be5cb7c1ba2f'
+        data.ApplicantPhotoId = '0b765049-47ac-4dcf-a4c7-7e8aac77640e'
+        data.ApplicantsNo = 1;
         data.EmailVerificationCode = otp;
         data.ServerAppointmentDate = date.DateText;
         return data;

@@ -1,0 +1,17 @@
+fetch("https://playground.bioid.com/LivenessDetection/EmptyResult", {
+  "headers": {
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9,fr;q=0.8,ar;q=0.7",
+    "priority": "u=1, i",
+    "sec-ch-ua": "\"Chromium\";v=\"124\", \"Google Chrome\";v=\"124\", \"Not-A.Brand\";v=\"99\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "cookie": "Playground.Authentication=CfDJ8J8I03vlh41EmV1bHkkU7LlJ7mY7Nh8GQ_hW0EQ1PoCtHfkYbJ3-bqFjUuLQIzoKym5UieC4AHgrNZXYZZhVBwGRZ9dvFXQ-qf5ltTcT7XmfW9h-5Vv2oOcFsESHbZME9sBEahHXILN9WMtLCN9pwK0-5kbR7pQFWzosJtmKn4SrXvrpf6pxuW1SSOs4vqNi-j0VkaKG5-Y3k55PwKC5T9Yh0t6eWhLBGVJtooZWvT50FILpPxFeXqXod183gnRHD5yFaCzz73_jr5nQWhzBf-1BjMVxypXHCfvzAkKSL0ws0GDIlnCfdCMUNANs24LanrWFOjd7x9xzgT9zp-2RA6Hv2PkoLyXRtbJCXRpy2IgxZdF-HlUiApFQQwMcKgXShF1Im8IOdUMPrNKS0rZ3g-cNSGpvZpYKdskgp01ZEgmAOmUlOfCuR_QLPItY3hH2hwrJaGvz7ywrWMwf1JvvWoxhk6selyCGn8vQfh2r8NdHTJCO8f8Z9nCQ2D7WaAZbN4_2LcIpxukkMZjDLQqNPCFqYGm6O2QnbEz1pBnvfx3II9Bn10o-MoGJ2GEMwwDD9GW9zMzjurCXZZy5-aCxrbNZR7mkycfWjBT0LA_nynLxXZXGGN05vCMhYBY12DthvXppCZ7_pIH7f-yKPX-wPewSkqe5V-jvcIMQuzilE9NDDIgFvdcQiqeZMw6an52Z7bijCnqPd9KyRr8UPY27bYg356PwIVzsB1Fpa72AUBYeVhTM2Iy4jQu6Ao4wCCRTeDDujFZ16TbFWZ4NCqX66MeRlNe6nyNA5ofClVk3_G_aHZa5y7kh1y_CRuSzkCjdIJHuyLtP4Bc3y85LAnkcBawPM_L4iNLLcQIzbOm8_NVsK_FUrcEs1Kgq-jxNZuMK-DJHP7qaMLmQbUjirzgeZEk54gnyt2lq6B0J3eTroBy-d5HNgPSxseFaqQccgc4UOPEFig6jotnfmT1eK7rFZK5jyT4l3JpPzE8qyFajBwEtnisQ9VuKvldGjhiXybsgfFAEbIHHAFX5BgTJ4KDCN8VeaGKtALG6vpWNZ3-_v5YqTAa4bf5r2korKuRQXdB0hBMsjol-srmLGcPfyzEsRnUA5sc-FdgvKrVMt1zPwHrfLRKFI6EuPOSZgpzBp72prLEXthH6TFpPkUZP16H-9GL8mM0nZvLHGPKxhCGTpvNPU3YkczjKYLUaBER3avUewtBKn2WlFpr4HQRhgpKKoY2bOHuBIyGXbF1SHxKU6jrKtqnGggaM3a7Ydw6XhjYkFPQ4WUXnkdNJ8CAwjVFbboOG9JcsS5nWVFZCjHMmYlj0Ic7bUVa_DHZWFLRTtxt6Qp1A278SGFReZUR5sRB6peTVP20Vt5wpVNAkpA7R9Jj1eqEgzTwPzy1df5xCOYWmxzTsQp-LEQ1bce4TiaHlVy3mT30MFoKsD1H7kQguCMQh3pldU2YnbTlHhXPVa5UqUlyQH0gBQn6jofod6cs48rNlAzRyf1BnWG1tb0xcnarnUXHTToI0s5KDAff25GD4Wu6qSIcdFczJRns6cmpDe3rvEZy_M5iZ6rh4Yb0oUJGTE6nfbTgByCreOPGgrqt7G_tNokm0Tcu2uZ8ASZPXUnAPjSGDDqKCF3iA4ZbW_PEbk1gYyYZCXI2RKcJPBHthX9nOlSO9GF_-sK1WFVO-hw75zkQgvzyrNoye5Ej2wuX3oGzBZeNscjrsypqAv411vHxIBooX43KJp1fBbWqVftmmY3j49hl7PpAxfECGAAKPMVn7at4vCOdU58DwrUItlcJyp1cWyoQEjvyxAJwj0PADIoJq3Al03h8U5d42gdhKXdHmU6sqg8kNyIBPBUlrhXO7GAMWkHDR-Nt8hzO1NbiMNpwPY6mpXB2DYucBRiX-c71EQlr-nrf7ngWR4NTLKEX51_yTtToClH0MFfyZbnxBvsK_gJBjmjbL56aikRSnf1MCGUBTOn3VEvEb_Tvpl4Ma3sbUsC94PrJqo1hpUpYzzkqQHE0g7c3a2C3eZ7iXvTOxbRudLxyWAmS1DKlMs5L9aoyYy0uBS_VeLwuX-g4oPt4czCjYsoqT9Jw7m7aOaubWxFHoJSjBt_VxW9GK0no5whtiU3ui9l__pyfmTmQ; .AspNetCore.Antiforgery.cdV5uW_Ejgc=CfDJ8J8I03vlh41EmV1bHkkU7LldHsrmjlvKkWICiMj6OnQrk78rjihExy0WPcgW3yVDvnhSs62FKtF1_GJLaN_gi9uM1JquHAWhr4zJ7pI_lRsP9uUjXqksnpwcYtVvAuxzTJzN7id2FkIw9AOrNRN80ZI"
+  },
+  "referrerPolicy": "no-referrer",
+  "body": null,
+  "method": "GET"
+});

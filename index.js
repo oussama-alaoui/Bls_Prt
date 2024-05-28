@@ -8,9 +8,9 @@ import { Waiter } from "./Classes/Waiter.js";
 var UserData =     
 {
     id: 3,
-    email: "bls_prt_wrk_00009@schngn.33mail.com",
-    counter: 9,
-    password: "120345",
+    email: "bls_prt_wrk_00012@schngn.33mail.com",
+    counter: 12,
+    password: "179322",
     FirstName: "Badr",
     LastName: "Firadi",
     DateOfBirth: "2004-01-03",
@@ -18,7 +18,7 @@ var UserData =
     ExpiryDate: "2029-11-21",
     PlaceOfBirth: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
     IssuePlace: "Tanger",
-    PassportNo: "OF4647778",
+    PassportNo: "ME2035556",
     NationalityId: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
     PassportType: "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
     IssueCountryId: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72"
@@ -43,7 +43,7 @@ async function initBowser(){
     await page.setRequestInterception(true);
     page.on('request', interceptedRequest => {
         if (interceptedRequest.isInterceptResolutionHandled()) return;
-        if (['stylesheet', 'font', 'image'].indexOf(interceptedRequest.resourceType()) !== -1)
+        if (['stylesheet', 'font', 'script', 'image'].indexOf(interceptedRequest.resourceType()) !== -1)
             interceptedRequest.abort();
         else {
             interceptedRequest.continue();

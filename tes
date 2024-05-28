@@ -1,0 +1,9 @@
+Error in getIds: Error: City not found
+    at getIds (file:///home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/index.js:58:29)
+    at start (file:///home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/index.js:78:23)
+    at file:///home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/index.js:100:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Error in start: Error: Insufficient command line arguments. Please provide city, visaType, and visaSubType.
+    at start (file:///home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/index.js:81:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Getting data for login: 10:26:02
