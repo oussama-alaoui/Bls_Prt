@@ -24,15 +24,13 @@ export class Waiter extends Parent {
     }
 
     async start() {
-        // this.images = await analyzeMotion()
-        // console.log("this.images: ", this.images);
         await this.Login();
         const slot = await this.VisaType();
         this.path = `https://morocco.blsportugal.com${slot.returnUrl}`;
         await this.Calendar();
         await this.Applicant();
-        await this.VideoVerification();
-        // return await this.getCmiLink();
+        const result = await this.VideoVerification();
+        return result;
     }
 
     async Calendar() {
@@ -50,7 +48,7 @@ export class Waiter extends Parent {
             const date = await getDate(this.page);
             var random = Math.floor(Math.random() * date.length);
             const slot = await getSlot(this.page, date[random], id);
-            const data = await CalendarprepareData(this.page, res.captcha, date[random], slot[0], this.otp);
+            const data = await CalendarprepareData(this.page, res.captcha, date[random], slot[0], this.otp, this.object.applicantPhotoId);
             const response = await Calendareq(this.page, data);
             if(response.success)
                 this.appPath = 'https://morocco.blsportugal.com/MAR/BlsAppointment/vaf/'+url+'?appointmentId='+response.model.Id;
@@ -94,7 +92,7 @@ export class Waiter extends Parent {
         try{
             await this.page.goto(this.pathvideo);
             const id2 = await this.page.$eval('input[name="Id"]', el => el.value);
-            this.pathvideo = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=84f694a0-a209-4cf4-844e-341b362274a3`;
+            this.pathvideo = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=${this.object.applicantPhotoId}`;
             console.log(this.pathvideo);
             var serviceId = await this.page.evaluate(() => {
                 return document.querySelectorAll('.vac-check')[8].id.slice(4)
@@ -112,50 +110,21 @@ export class Waiter extends Parent {
                 __RequestVerificationToken: __RequestVerificationToken,
                 appointmentId: id2,
             };
-            var res = await VerifyVideo(this.page2, data);
+            var res = await VerifyVideo(this.page2, data, [this.object.image2, this.object.image1]);
             const script = await this.page.evaluate(() => {
                 const script = Array.from(document.scripts).map(script => script.innerHTML)
                 return script[0].split('Id1')[1].split(':')[1].split('"')[0].split('}')[0].replace('\'', '').replace('\'', '')
             });
-            console.log("script: ", res);
+            data = {
+                Id1: script,
+                ValueAddedServices: `${serviceId}_1`,
+                Id: id2,
+            }
+            res = await reqPr(this.page, data, this.requestVerificationToken);
             return {
                 fullname: this.object.FirstName + ' ' + this.object.LastName,
                 url: `https://morocco.blsportugal.com${res.requestURL}`
             }
-        }
-        catch (error) {
-            console.error('Error:', error);
-        }
-    }
-    
-    async getCmiLink(){
-        try{
-            await this.page.goto(this.path);
-            const cmiLink = await this.page.evaluate(() => {
-                const data = {
-                    clientid: document.querySelector('input[name="clientid"]').value,
-                    amount: document.querySelector('input[name="amount"]').value,
-                    okUrl: document.querySelector('input[name="okUrl"]').value,
-                    failUrl: document.querySelector('input[name="failUrl"]').value,
-                    TranType: document.querySelector('input[name="TranType"]').value,
-                    callbackUrl: document.querySelector('input[name="callbackUrl"]').value,
-                    currency: document.querySelector('input[name="currency"]').value,
-                    storetype: document.querySelector('input[name="storetype"]').value, 
-                    hashAlgorithm: document.querySelector('input[name="hashAlgorithm"]').value,
-                    lang: document.querySelector('input[name="lang"]').value,
-                    BillToName: document.querySelector('input[name="BillToName"]').value,
-                    BillToCompany: document.querySelector('input[name="BillToCompany"]').value,
-                    email: document.querySelector('input[name="email"]').value,
-                    encoding: document.querySelector('input[name="encoding"]').value,
-                    AutoRedirect: document.querySelector('input[name="AutoRedirect"]').value,
-                    hash: document.querySelector('input[name="hash"]').value,
-                    oid: document.querySelector('input[name="oid"]').value,
-                    rnd: document.querySelector('input[name="rnd"]').value,
-                }
-                return {url: document.querySelector('form').action, data};
-            });
-            
-            
         }
         catch (error) {
             console.error('Error:', error);

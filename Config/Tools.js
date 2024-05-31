@@ -147,7 +147,7 @@ export async function prepareData(page, ids) {
 
 export async function Slotprocess(page, browser, retry = 0, ids) {
     try {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 40; i++) {
             var res = await captchaProcess(page, browser, 'https://morocco.blsportugal.com/MAR/NewCaptcha/GenerateCaptcha', 'verify', '/MAR/NewCaptcha/SubmitCaptcha');
             const url = await getUrl(page, res.cd);
             await page.goto(`https://morocco.blsportugal.com${url.returnUrl}`);
@@ -157,11 +157,11 @@ export async function Slotprocess(page, browser, retry = 0, ids) {
                 return slot;
             }
             console.log("Slot not available: ", i, "Retry in 30 seconds", "data: ", slot);
+            await new Promise(resolve => setTimeout(resolve, 5000));
         }
         return false;
     } catch (error) {
         console.log('Error in Slotprocess:', error);
-        // Handle the error as needed
         throw error; // Rethrow the error to stop further execution
     }
 }
@@ -198,7 +198,7 @@ async function getAllInput(page, body) {
     }
 }
 
-export async function CalendarprepareData(page, captchadata, date, slot, otp) {
+export async function CalendarprepareData(page, captchadata, date, slot, otp, photoId) {
     try {
         var data = await page.evaluate(async (date, slot) => {
             const data = {};
@@ -221,7 +221,7 @@ export async function CalendarprepareData(page, captchadata, date, slot, otp) {
         }, date, slot);
         data = { ...data, ...await getAllInput(page, data) };
         data.CaptchaData = captchadata;
-        data.ApplicantPhotoId = '84f694a0-a209-4cf4-844e-341b362274a3'
+        data.ApplicantPhotoId = photoId;
         data.ApplicantsNo = 1;
         data.EmailVerificationCode = otp;
         data.ServerAppointmentDate = date.DateText;
@@ -318,18 +318,3 @@ export async function ApplicantprepareData(page) {
         console.error('Error:', error);
     }
 }
-
-// Video Verification Helper Functions
-
-function generateFakeCameraLabel() {
-    // Generate a random camera label in a format similar to real data
-    const manufacturer = ['Canon', 'Nikon', 'Sony', 'Fujifilm', 'Olympus'];
-    const modelPrefix = ['EOS', 'DSC', 'Alpha', 'FinePix', 'OM-D'];
-    const modelNumber = Math.floor(Math.random() * 1000) + 1000; // Generate a 4-digit number
-    const serialNumber = Math.floor(Math.random() * 100000) + 100000; // Generate a 6-digit number
-
-    const fakeCameraLabel = `${manufacturer[Math.floor(Math.random() * manufacturer.length)]} ${modelPrefix[Math.floor(Math.random() * modelPrefix.length)]}-${modelNumber}-${serialNumber}`;
-
-    return fakeCameraLabel;
-}
-

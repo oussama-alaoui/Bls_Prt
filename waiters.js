@@ -213,7 +213,7 @@ export const waiters = [
     "mobile": "779580916",
     "image1": "https://i.postimg.cc/fknTLwcp/image1.png",
     "image2": "https://i.postimg.cc/QNRp510G/image2.png",
-    "applicantPhotoId": "357a0ca9-9d9b-47bd-8a2d-3e44ffb0ca8e",
+    "applicantPhotoId": "46c5828e-d665-4003-a2bc-3929a684574d",
   },
   {
     "id": 2,
@@ -259,12 +259,12 @@ export const waiters = [
     "mobile": "635923110",
     "image1": "https://i.postimg.cc/tg4j512p/image1.png",
     "image2": "https://i.postimg.cc/rpmB4Bwp/image2.png",
-    "applicantPhotoId": "08e9ef68-b6a8-4a63-bf82-c75031877df4",
+    "applicantPhotoId": "1bfbd85d-7834-42cb-963f-ebde38712bc2",
   },
   {
     "id": 4,
     "email": "vfs_por_adaezziani2@schngn.33mail.com",
-    "visaSubType": "Work",
+    "visaSubType": "Studies",
     "center": "CASABLANCA",
     "counter": 24,
     "password": "Abcd@1234",
@@ -329,46 +329,74 @@ export const waiters = [
   //   "image2": "https://i.postimg.cc/Ssyw6Vbg/image2.png",
   //   "applicantPhotoId": "e7f16702-a4ec-45f6-89ea-290c6775f755",
   // },
-  // {
-  //   "id": 7,
-  //   "email": "hattabahmed@schengn.mailer.me",
-  //   "visaSubType": "SCHENGEN_VISA",
-  //   "center": "RABAT",
-  //   "password": "Abcd@1234",
-  //   "FirstName": "AHMED",
-  //   "LastName": "HATTAB",
-  //   "DateOfBirth": "1992/01/14",
-  //   "IssueDate": "2023/12/15",
-  //   "ExpiryDate": "2028/12/15",
-  //   "PlaceOfBirth": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
-  //   "IssuePlace": "MOHAMMEDIA",
-  //   "PassportNo": "YU2373957",
-  //   "NationalityId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
-  //   "PassportType": "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
-  //   "IssueCountryId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
-  //   "mobile": "672962820",
-  //   "image1": "https://i.postimg.cc/rpxCgLNJ/image1.png",
-  //   "image2": "https://i.postimg.cc/tJC3XnQS/image2.png",
-  //   "applicantPhotoId": "4b307a50-21a3-42d9-a6d2-30a8dae65293",
-  // },
+  {
+    "id": 7,
+    "email": "hattabahmed@schengn.mailer.me",
+    "visaSubType": "SCHENGEN_VISA",
+    "center": "CASABLANCA",
+    "password": "Abcd@1234",
+    "FirstName": "AHMED",
+    "LastName": "HATTAB",
+    "DateOfBirth": "1992/01/14",
+    "IssueDate": "2023/12/15",
+    "ExpiryDate": "2028/12/15",
+    "PlaceOfBirth": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "IssuePlace": "MOHAMMEDIA",
+    "PassportNo": "YU2373957",
+    "NationalityId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "PassportType": "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
+    "IssueCountryId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "mobile": "672962820",
+    "image1": "https://i.postimg.cc/rpxCgLNJ/image1.png",
+    "image2": "https://i.postimg.cc/tJC3XnQS/image2.png",
+    "applicantPhotoId": "4b307a50-21a3-42d9-a6d2-30a8dae65293",
+  },
+  {
+    "id": 8,
+    "email": "bouichaimane@schengn.mailer.me",
+    "visaSubType": "SCHENGEN_VISA",
+    "center": "RABAT",
+    "password": "Abcd@1234",
+    "FirstName": "IMANE",
+    "LastName": "BOUICHA",
+    "DateOfBirth": "1990/03/06",
+    "IssueDate": "2023/04/17",
+    "ExpiryDate": "2028/04/17",
+    "PlaceOfBirth": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "IssuePlace": "SAFI",
+    "PassportNo": "MS4624603",
+    "NationalityId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "PassportType": "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
+    "IssueCountryId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "mobile": "661919019",
+    "image1": "https://i.postimg.cc/QtZ01JvH/image1.png",
+    "image2": "https://i.postimg.cc/sfcwGSmg/image2.png",
+    "applicantPhotoId": "65b9722e-aa2e-4153-816e-9fc1d1e29def",
+  },
 ]
-// bennour
-// 08e9ef68-b6a8-4a63-bf82-c75031877df4
 
-// ezziani
-// be9ff595-5651-40d9-87d2-9017e1a0c81e
 
-// ougmlil
-// f64a5b86-e415-4074-ad3a-f31420149f1f
 
-// elotmani
-// 2afbcb4e-7dba-4b22-ba72-37a00d6b8ce6
 
-// salmani
-// e7f16702-a4ec-45f6-89ea-290c6775f755
-
-// hattab
-// 4b307a50-21a3-42d9-a6d2-30a8dae65293
-
-// boicha imane
-// 65b9722e-aa2e-4153-816e-9fc1d1e29def
+fetch("https://morocco.blsportugal.com/MAR/query/UploadProfileImage", {
+  "headers": {
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.8",
+    "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryGMrxnFrUBf2AN99I",
+    "requestverificationtoken": "CfDJ8OMsLGClZV1OjqXW0LRvyzx7SYO5zrv4sgCxpRyX46E4LM2zImnSDJPUZGgRbwJGovdM-va7h368IT-t7jzFSCSX7jSfYub9dxAYnLydojHv_HCZNxqXrN51epjlUaaIlfffh7ieC_BzBuMmBjZqQ7tn2qYCPsQ28_SDD_9k_ggiwgg7SIbGbHJYoyqfi8DPCA",
+    "sec-ch-ua": "\"Brave\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "sec-gpc": "1",
+    "x-requested-with": "XMLHttpRequest"
+  },
+  "referrer": "https://morocco.blsportugal.com/MAR/blsappointment/manageappointment0966/bfd9?appointmentFor=Individual&applicantsNo=1&visaType=084cd40f-c448-475e-8873-6b5eff2e01bf&visaSubType=e70cc749-5b1e-457f-b664-f27a05082aaf&appointmentCategory=5c2e8e01-796d-4347-95ae-0c95a9177b26&location=8d780684-1524-4bda-b138-7c71a8591944&data=mug121r8E0BxF%2BjjZEReEWCQMZV3xO%2F8%2FuMOH8jzT%2BvXHVK3yVYhNWXEg28Yoet1X9bYVxL80hKSQshutXFdeMzuOhbhWF%2Fn7lTVC%2BSBL847yvodHsWLjIMD3JouFopfXGXFE50cJxDIBbmBUDEoVnWH2WoJvK5ZNOVkJ0o9xXs%3D",
+  "referrerPolicy": "strict-origin-when-cross-origin",
+  "body": "------WebKitFormBoundaryGMrxnFrUBf2AN99I\r\nContent-Disposition: form-data; name=\"file\"; filename=\"WhatsApp Image 2024-05-22 at 14.09.16.jpeg\"\r\nContent-Type: image/jpeg\r\n\r\n\r\n------WebKitFormBoundaryGMrxnFrUBf2AN99I--\r\n",
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});

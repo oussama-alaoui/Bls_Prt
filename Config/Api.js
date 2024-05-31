@@ -194,9 +194,9 @@ export async function Applicantreq(page, data, path) {
     }
 }
 
-export async function VerifyVideo(page, formData) {
+export async function VerifyVideo(page, formData, imageUrls) {
     try {
-        const response = await page.evaluate(async (formData) => {
+        const response = await page.evaluate(async (formData, imageUrls) => {
             async function fetchImageAsBlob(url) {
                 try {
                     const response = await fetch(url, { mode: 'cors' });
@@ -207,10 +207,10 @@ export async function VerifyVideo(page, formData) {
                 }
             }
 
-            const imageUrls = [
-                "https://i.postimg.cc/sgsmcC9y/image4.png",
-                "https://i.postimg.cc/1X8c89Qc/image3.png"
-            ];
+            // const imageUrls = [
+            //     "https://i.postimg.cc/sgsmcC9y/image4.png",
+            //     "https://i.postimg.cc/1X8c89Qc/image3.png"
+            // ];
 
             try {
                 const image1res = await fetchImageAsBlob(imageUrls[1]);
@@ -237,16 +237,16 @@ export async function VerifyVideo(page, formData) {
                 console.error('Failed to create blobs and submit form:', error);
                 throw error;
             }
-        }, formData);
+        }, formData, imageUrls);
         return response;
     } catch (error) {
         console.error('Error in VerifyVideo:', error);
     }
 }
 
-export async function reqPr(page, data, path, requestVerificationToken) {
+export async function reqPr(page, data, requestVerificationToken) {
     try {
-        const response = await page.evaluate(async (data, path, requestVerificationToken) => {
+        const response = await page.evaluate(async (data, requestVerificationToken) => {
             const body = new FormData();
             body.append('Id1', data.Id1);
             body.append('ValueAddedServices', data.ValueAddedServices);
@@ -259,7 +259,7 @@ export async function reqPr(page, data, path, requestVerificationToken) {
                 body: body,
             });
             return response.json();
-        }, data, path, requestVerificationToken);
+        }, data, requestVerificationToken);
         return response;
     } catch (error) {
         console.error('Error:', error);

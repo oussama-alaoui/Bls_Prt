@@ -1,0 +1,13 @@
+Initiating browser: 181
+start process for user:  1
+Getting data for login: 16:11:47
+Login success for user:  1
+Slot not available:  0 Retry in 30 seconds data:  { success: false, available: false }
+Slot not available:  1 Retry in 30 seconds data:  { success: false, available: false }
+Slot not available:  2 Retry in 30 seconds data:  { success: false, available: false }
+Slot not available:  3 Retry in 30 seconds data:  { success: false, available: false }
+Slot not available:  4 Retry in 30 seconds data:  { success: false, available: false }
+Slot not available:  5 Retry in 30 seconds data:  { success: false, available: false }
+Captcha failed, retrying...
+Slot not available:  6 Retry in 30 seconds data:  { success: false, available: false }
+No div with class 'box-label' found.
