@@ -147,19 +147,18 @@ export async function prepareData(page, ids) {
 
 export async function Slotprocess(page, browser, retry = 0, ids) {
     try {
-        var res = await captchaProcess(page, browser, 'https://morocco.blsportugal.com/MAR/NewCaptcha/GenerateCaptcha', 'verify', '/MAR/NewCaptcha/SubmitCaptcha');
-        const url = await getUrl(page, res.cd);
-        await page.goto(`https://morocco.blsportugal.com${url.returnUrl}`);
-        const slot = await checkSlot(page, url.returnUrl, ids);
-        if (slot.available == true) {
-            console.log("Slot available");
-            return slot;
-        } else {
-            console.log("Slot not available: ", retry, "Retry in 30 seconds", "data: ", slot);
-            retry++;
-            await new Promise(resolve => setTimeout(resolve, 10000));
-            return await Slotprocess(page, browser, retry, ids);
+        for (let i = 0; i < 30; i++) {
+            var res = await captchaProcess(page, browser, 'https://morocco.blsportugal.com/MAR/NewCaptcha/GenerateCaptcha', 'verify', '/MAR/NewCaptcha/SubmitCaptcha');
+            const url = await getUrl(page, res.cd);
+            await page.goto(`https://morocco.blsportugal.com${url.returnUrl}`);
+            const slot = await checkSlot(page, url.returnUrl, ids);
+            if (slot.available == true) {
+                console.log("Slot available");
+                return slot;
+            }
+            console.log("Slot not available: ", i, "Retry in 30 seconds", "data: ", slot);
         }
+        return false;
     } catch (error) {
         console.log('Error in Slotprocess:', error);
         // Handle the error as needed
@@ -222,7 +221,7 @@ export async function CalendarprepareData(page, captchadata, date, slot, otp) {
         }, date, slot);
         data = { ...data, ...await getAllInput(page, data) };
         data.CaptchaData = captchadata;
-        data.ApplicantPhotoId = '0b765049-47ac-4dcf-a4c7-7e8aac77640e'
+        data.ApplicantPhotoId = '84f694a0-a209-4cf4-844e-341b362274a3'
         data.ApplicantsNo = 1;
         data.EmailVerificationCode = otp;
         data.ServerAppointmentDate = date.DateText;

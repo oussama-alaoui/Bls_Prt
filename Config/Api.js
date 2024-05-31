@@ -1,7 +1,4 @@
 import { prepareData } from "./Tools.js";
-import { exec } from 'child_process';
-import { createCanvas, loadImage } from 'canvas';
-import fs from 'fs'
 
 export async function login_request(page, data, captcha, UserData) {
     try {
@@ -130,7 +127,6 @@ export async function Calendareq(page, data) {
             });
             return response.json();
         }, data, url);
-        console.log(response);
         return response;
     } catch (error) {
         console.error('Error:', error);
@@ -192,7 +188,6 @@ export async function Applicantreq(page, data, path) {
             });
             return response.json();
         }, data, path);
-        console.log(response);
         return response;
     } catch (error) {
         console.error('Error:', error);
@@ -213,16 +208,13 @@ export async function VerifyVideo(page, formData) {
             }
 
             const imageUrls = [
-                "https://i.postimg.cc/wv351nrH/image222.png",
-                "https://i.postimg.cc/HLY9gr4r/image111.png"
+                "https://i.postimg.cc/sgsmcC9y/image4.png",
+                "https://i.postimg.cc/1X8c89Qc/image3.png"
             ];
 
             try {
                 const image1res = await fetchImageAsBlob(imageUrls[1]);
                 const image2res = await fetchImageAsBlob(imageUrls[0]);
-
-                console.log('Blob created for image1:', image1res);
-                console.log('Blob created for image2:', image2res);
 
                 const formDataWithBlobs = new FormData();
                 formDataWithBlobs.append('Id', formData.Id);
@@ -246,27 +238,28 @@ export async function VerifyVideo(page, formData) {
                 throw error;
             }
         }, formData);
-
-        console.log('Response from form submission:', response);
         return response;
     } catch (error) {
         console.error('Error in VerifyVideo:', error);
     }
 }
 
-export async function reqPr(page, data) {
+export async function reqPr(page, data, path, requestVerificationToken) {
     try {
-        const response = await page.evaluate(async (data) => {
+        const response = await page.evaluate(async (data, path, requestVerificationToken) => {
+            const body = new FormData();
+            body.append('Id1', data.Id1);
+            body.append('ValueAddedServices', data.ValueAddedServices);
+            body.append('Id', data.Id);
             const response = await fetch('https://morocco.blsportugal.com/MAR/payment/pr', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Requestverificationtoken': requestVerificationToken,
                 },
-                body: new URLSearchParams(data)
+                body: body,
             });
             return response.json();
-        }, data);
-        console.log(response);
+        }, data, path, requestVerificationToken);
         return response;
     } catch (error) {
         console.error('Error:', error);

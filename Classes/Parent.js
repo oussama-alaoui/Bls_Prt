@@ -9,10 +9,11 @@ import { getEmailContent } from "../Config/scriptVirify.js";
 import { login_request } from "../Config/Api.js";
 
 export class Parent {
-    constructor(object, page, browser) {
+    constructor(object, page, browser, page2) {
         this.object = object;
         this.page = page;
         this.browser = browser;
+        this.page2 = page2;
     }
 
     Login = async () => {

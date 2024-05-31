@@ -5,27 +5,14 @@ import { LocationIds, VisaSubTypeIds } from "./Config/DataIds.js";
 // import Class
 import { Worker } from "./Classes/Worker.js";
 import { Waiter } from "./Classes/Waiter.js";
-var UserData =     
-{
-    id: 3,
-    email: "bls_prt_wrk_00012@schngn.33mail.com",
-    counter: 12,
-    password: "179322",
-    FirstName: "Badr",
-    LastName: "Firadi",
-    DateOfBirth: "2004-01-03",
-    IssueDate: "2024-05-16",
-    ExpiryDate: "2029-11-21",
-    PlaceOfBirth: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
-    IssuePlace: "Tanger",
-    PassportNo: "ME2035556",
-    NationalityId: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
-    PassportType: "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
-    IssueCountryId: "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72"
-};
-// 0b765049-47ac-4dcf-a4c7-7e8aac77640e
-async function initBowser(){
-    const proxyUrl = 'http://rotating.proxyempire.io:9059';
+
+// import Data worker and waiter
+import { waiters } from "./waiters.js";
+import { Workers } from "./workers.js";
+
+async function initBowser(index = 0){
+    console.log('Initiating browser:', index);
+    const proxyUrl = `http://rotating.proxyempire.io:${9059+index}`;
     const newProxyUrl = await ProxyChain.anonymizeProxy(proxyUrl);
     const browser = await puppeteer.launch({
         headless: false,
@@ -36,7 +23,12 @@ async function initBowser(){
     });
 
     const page = await browser.newPage();
+    const page2 = await browser.newPage();
     await page.authenticate({
+        username: '8ABBJGFziUOUDIJQ',
+        password: 'wifi;ma;;;'
+    });
+    await page2.authenticate({
         username: '8ABBJGFziUOUDIJQ',
         password: 'wifi;ma;;;'
     });
@@ -49,7 +41,16 @@ async function initBowser(){
             interceptedRequest.continue();
         }
     });
-    return {page, browser};
+    await page2.setRequestInterception(true);
+    page2.on('request', interceptedRequest => {
+        if (interceptedRequest.isInterceptResolutionHandled()) return;
+        if (['stylesheet', 'font', 'script', 'image', 'video'].indexOf(interceptedRequest.resourceType()) !== -1)
+            interceptedRequest.abort();
+        else {
+            interceptedRequest.continue();
+        }
+    });
+    return {page, browser, page2};
 }
 
 async function getIds(city, visaType, visaSubType){
@@ -71,30 +72,48 @@ async function getIds(city, visaType, visaSubType){
     }
 }
 
+async function runWaiter(waiters, ids, index){
+    try {
+        console.log('Waiter started:', waiters.id);
+        const { page, browser, page2 } = await initBowser(index+200);
+        const waiter = new Waiter({ ...waiters, ...ids }, page, browser, page2);
+        const result = await waiter.start();
+        console.log('Waiter task completed for id:', waiters.id, result);
+    } catch (error) {
+        console.log('Error in runWaiter:', error);
+    }
+}
+
+async function runWorker(worker, ids, index){
+    try {
+        const { page, browser } = await initBowser(index+Math.floor(Math.random()*200));
+        const newWorker = new Worker({ ...worker[index], ...ids }, page, browser);
+        const result = await newWorker.start();
+        if(!result)
+            return await runWorker(worker, ids, index+1);
+        console.log('Worker find slot successfully');
+    } catch (error) {
+        console.log('Error in runWorker:', error);
+    }
+}
+
 async function start() {
+    if (process.argv.length < 5)
+        throw new Error('Insufficient command line arguments. Please provide city, visaType, and visaSubType.');
     const city = process.argv[2];
     const visaType = process.argv[3];
     const visaSubType = process.argv[4];
     const ids = await getIds(city, visaType, visaSubType);
+    const waitersFiltre = waiters.filter(x => x.center.toLowerCase().includes(city.toLowerCase()) && x.visaSubType.toLowerCase().includes(visaSubType.toLowerCase()));
     try {
-        if (process.argv.length < 5) {
-            throw new Error('Insufficient command line arguments. Please provide city, visaType, and visaSubType.');
-        }
-        // const { page, browser } = await initBowser();
-        // const worker = new Worker({ ...UserData, ...ids }, page, browser);
-        // await worker.start();
+        // await runWorker(Workers, ids, 0);
+        waitersFiltre.forEach(async (waiter, index) => {
+            await runWaiter(waiter, ids, index);
+        });
     } catch (error) {
         console.log('Error in start:', error);
-    }finally {
-        try {
-            // Create a new waiter
-            const { page, browser } = await initBowser();
-            const waiter = new Waiter({ ...UserData, ...ids }, page, browser);
-            await waiter.start();
-        } catch (error) {
-            console.log('Error in finally block:', error);
-        }
     }
 }
+
 
 start();

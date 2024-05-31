@@ -15,13 +15,12 @@ import { requestOtp,
     reqPr
 } from "../Config/Api.js";
 
-import { imageToBlob } from "../Config/video.js";
 import { captchaProcess } from "../Config/CaptchaProcess.js";
 import { getEmailContent } from "../Config/Otp.js";
 
 export class Waiter extends Parent {
-    constructor(object, page, browser) {
-        super(object, page, browser);
+    constructor(object, page, browser, page2) {
+        super(object, page, browser, page2);
     }
 
     async start() {
@@ -33,6 +32,7 @@ export class Waiter extends Parent {
         await this.Calendar();
         await this.Applicant();
         await this.VideoVerification();
+        // return await this.getCmiLink();
     }
 
     async Calendar() {
@@ -45,12 +45,12 @@ export class Waiter extends Parent {
             await new Promise(resolve => setTimeout(resolve, 10000));
             var res = await captchaProcess(this.page, this.browser, 'https://morocco.blsportugal.com'+captchadata, 'login', '/MAR/CaptchaPublic/SubmitCaptcha');
             this.otp = await getEmailContent(this.object.email, new Date());
-            console.log("this.otp: ", this.otp);
             await verifyOtp(this.page, scriptContent, this.otp);
             await this.page.$eval('input[name="EmailVerified"]', el => el.value = true);
             const date = await getDate(this.page);
-            const slot = await getSlot(this.page, date[0], id);
-            const data = await CalendarprepareData(this.page, res.captcha, date[0], slot[0], this.otp);
+            var random = Math.floor(Math.random() * date.length);
+            const slot = await getSlot(this.page, date[random], id);
+            const data = await CalendarprepareData(this.page, res.captcha, date[random], slot[0], this.otp);
             const response = await Calendareq(this.page, data);
             if(response.success)
                 this.appPath = 'https://morocco.blsportugal.com/MAR/BlsAppointment/vaf/'+url+'?appointmentId='+response.model.Id;
@@ -60,7 +60,6 @@ export class Waiter extends Parent {
             
         } catch (error) {
             console.error('Error:', error);
-            this.Calendar();
         }
     }
 
@@ -72,7 +71,7 @@ export class Waiter extends Parent {
                 const url = document.querySelector('form').action;
                 return url;
             });
-            console.log(url);
+            this.requestVerificationToken = await this.page.$eval('input[name="__RequestVerificationToken"]', el => el.value);
             var data = await ApplicantprepareData(this.page);
             var applications = await OnApplicationSubmit(this.page, this.object);
             data.ApplicantsDetailsList = JSON.stringify(applications);
@@ -84,66 +83,79 @@ export class Waiter extends Parent {
                 return Array.from(document.scripts).map(script => script.innerHTML);
             });
             url = scriptContent.join().split('vpf')[1].split('?')[0];
-            this.path = `https://morocco.blsportugal.com/MAR/BlsAppointment/vpf${url}?appointmentId=${res.model.Id}`;
+            this.pathvideo = `https://morocco.blsportugal.com/MAR/BlsAppointment/vpf${url}?appointmentId=${res.model.Id}`;
         }
         catch (error) {
             console.error('Error:', error);
         }
     }
-//   "headers": {
-//     "accept": "*/*",
-//     "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
-//     "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryh8qtAzlPz4Slt86N",
-//     "priority": "u=1, i",
-//     "sec-ch-ua": "\"Chromium\";v=\"124\", \"Google Chrome\";v=\"124\", \"Not-A.Brand\";v=\"99\"",
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform": "\"Windows\"",
-//     "sec-fetch-dest": "empty",
-//     "sec-fetch-mode": "cors",
-//     "sec-fetch-site": "same-origin"
-//   }
+
     async VideoVerification(){
         try{
-            this.page2 = await this.browser.newPage();
-            await this.page.goto(this.path);
+            await this.page.goto(this.pathvideo);
             const id2 = await this.page.$eval('input[name="Id"]', el => el.value);
-            this.path = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=0b765049-47ac-4dcf-a4c7-7e8aac77640e`;
-            console.log(this.path);
+            this.pathvideo = `https://morocco.blsportugal.com/MAR/blsappointment/livenessdetection?appointmentId=${id2}&applicantPhotoId=84f694a0-a209-4cf4-844e-341b362274a3`;
+            console.log(this.pathvideo);
             var serviceId = await this.page.evaluate(() => {
                 return document.querySelectorAll('.vac-check')[8].id.slice(4)
             })
-            await this.page.goto(this.path, {waitUntil: 'networkidle2'});
+            console.log("this.pathvideo: ", this.pathvideo);
+            await this.page2.goto(this.pathvideo);
+
             
-            
-            const __RequestVerificationToken = await this.page.$eval('input[name="__RequestVerificationToken"]', el => el.value);
-            const ApplicantPhotoId = await this.page.$eval('input[name="ApplicantPhotoId"]', el => el.value);
-            const imagePath1 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image1.png";
-            const imagePath2 = "/home/wst-4r/Desktop/oussama_alaoui/bls/Bls/Bls_Prt/Bls_Prt/assets/images/image2.png";
-            
-            let img1, img2;
-            
-            imageToBlob(imagePath1)
-            img1 = await imageToBlob(imagePath1);
-            img2 = await imageToBlob(imagePath2);
-            // convert blob to binary file
+            const __RequestVerificationToken = await this.page2.$eval('input[name="__RequestVerificationToken"]', el => el.value);
+            const ApplicantPhotoId = await this.page2.$eval('input[name="ApplicantPhotoId"]', el => el.value);
+
             var data = {
                 Id: id2,
                 ApplicantPhotoId: ApplicantPhotoId,
                 __RequestVerificationToken: __RequestVerificationToken,
-                image1: img1, // Include Base64-encoded image data
-                image2: img2, // Include Base64-encoded image data
-                cameraLabel: "camera",
-                isMobile: false,
                 appointmentId: id2,
             };
-            const res = await VerifyVideo(this.page, data);
-            data = {
-                Id1: this.id1,
-                ServiceId: `${serviceId}_1`,
-                Id: id2,
+            var res = await VerifyVideo(this.page2, data);
+            const script = await this.page.evaluate(() => {
+                const script = Array.from(document.scripts).map(script => script.innerHTML)
+                return script[0].split('Id1')[1].split(':')[1].split('"')[0].split('}')[0].replace('\'', '').replace('\'', '')
+            });
+            console.log("script: ", res);
+            return {
+                fullname: this.object.FirstName + ' ' + this.object.LastName,
+                url: `https://morocco.blsportugal.com${res.requestURL}`
             }
-            console.log(data);
-            res = await reqPr(this.page, data);
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+    async getCmiLink(){
+        try{
+            await this.page.goto(this.path);
+            const cmiLink = await this.page.evaluate(() => {
+                const data = {
+                    clientid: document.querySelector('input[name="clientid"]').value,
+                    amount: document.querySelector('input[name="amount"]').value,
+                    okUrl: document.querySelector('input[name="okUrl"]').value,
+                    failUrl: document.querySelector('input[name="failUrl"]').value,
+                    TranType: document.querySelector('input[name="TranType"]').value,
+                    callbackUrl: document.querySelector('input[name="callbackUrl"]').value,
+                    currency: document.querySelector('input[name="currency"]').value,
+                    storetype: document.querySelector('input[name="storetype"]').value, 
+                    hashAlgorithm: document.querySelector('input[name="hashAlgorithm"]').value,
+                    lang: document.querySelector('input[name="lang"]').value,
+                    BillToName: document.querySelector('input[name="BillToName"]').value,
+                    BillToCompany: document.querySelector('input[name="BillToCompany"]').value,
+                    email: document.querySelector('input[name="email"]').value,
+                    encoding: document.querySelector('input[name="encoding"]').value,
+                    AutoRedirect: document.querySelector('input[name="AutoRedirect"]').value,
+                    hash: document.querySelector('input[name="hash"]').value,
+                    oid: document.querySelector('input[name="oid"]').value,
+                    rnd: document.querySelector('input[name="rnd"]').value,
+                }
+                return {url: document.querySelector('form').action, data};
+            });
+            
+            
         }
         catch (error) {
             console.error('Error:', error);
