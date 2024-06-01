@@ -2,6 +2,8 @@ export const Workers = [
   {
     "id": 1,
     "email": "bls_prt_wrk_00012@schngn.33mail.com",
+    "center": "RABAT",
+    "visaSubType": "Studies",
     "counter": 12,
     "password": "179322",
     "FirstName": "Badr",
@@ -14,11 +16,16 @@ export const Workers = [
     "PassportNo": "ME2035556",
     "NationalityId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
     "PassportType": "0a152f62-b7b2-49ad-893e-b41b15e2bef3",
-    "IssueCountryId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72"
+    "IssueCountryId": "5e44cd63-68f0-41f2-b708-0eb3bf9f4a72",
+    "image1": "https://i.postimg.cc/fknTLwcp/image1.png",
+    "image2": "https://i.postimg.cc/QNRp510G/image2.png",
+    "applicantPhotoId": "46c5828e-d665-4003-a2bc-3929a684574d",
   },
   {
     "id": 2,
     "email": "bls_prt_wrk_00013@schngn.33mail.com",
+    "center": "RABAT",
+    "visaSubType": "Studies",
     "counter": 13,
     "password": "302657",
     "FirstName": "Badr",
@@ -36,6 +43,8 @@ export const Workers = [
   {
     "id": 3,
     "email": "bls_prt_wrk_00023@schngn.33mail.com",
+    "center": "RABAT",
+    "visaSubType": "Studies",
     "counter": 23,
     "password": "466225",
     "FirstName": "Badr",

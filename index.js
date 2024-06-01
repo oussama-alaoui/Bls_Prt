@@ -1,14 +1,14 @@
 import puppeteer from "puppeteer";
 import ProxyChain from "proxy-chain";
-import { LocationIds, VisaSubTypeIds } from "./Config/DataIds.js";
+import { LocationIds, VisaSubTypeIds } from "./Data/Params.js";
 
 // import Class
 import { Worker } from "./Classes/Worker.js";
 import { Waiter } from "./Classes/Waiter.js";
 
 // import Data worker and waiter
-import { waiters } from "./waiters.js";
-import { Workers } from "./workers.js";
+import { waiters } from "./Data/waiters.js";
+import { Workers } from "./Data/workers.js";
 
 async function initBowser(index = 0){
     console.log('Initiating browser:', index);
@@ -106,7 +106,7 @@ async function start() {
     const ids = await getIds(city, visaType, visaSubType);
     const waitersFiltre = waiters.filter(x => x.center.toLowerCase().includes(city.toLowerCase()) && x.visaSubType.toLowerCase().includes(visaSubType.toLowerCase()));
     try {
-        // await runWorker(Workers, ids, 0);
+        await runWorker(Workers, ids, 0);
         waitersFiltre.forEach(async (waiter, index) => {
             await runWaiter(waiter, ids, index);
         });
@@ -114,6 +114,5 @@ async function start() {
         console.log('Error in start:', error);
     }
 }
-
 
 start();
