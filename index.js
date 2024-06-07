@@ -3,19 +3,19 @@ import ProxyChain from "proxy-chain";
 import { LocationIds, VisaSubTypeIds } from "./Data/Params.js";
 
 // import Class
-import { Worker } from "./Classes/Worker.js";
-import { Waiter } from "./Classes/Waiter.js";
+import { Worker } from "./src/Worker.js";
+import { Waiter } from "./src/Waiter.js";
 
 // import Data worker and waiter
 import { waiters } from "./Data/waiters.js";
 import { Workers } from "./Data/workers.js";
 
-async function initBowser(index = 0){
+async function initBowser(index){
     console.log('Initiating browser:', index);
     const proxyUrl = `http://rotating.proxyempire.io:${9059+index}`;
     const newProxyUrl = await ProxyChain.anonymizeProxy(proxyUrl);
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: "new",
         args: [
             '--auto-open-devtools-for-tabs',
             `--proxy-server=${newProxyUrl}`
@@ -44,7 +44,7 @@ async function initBowser(index = 0){
     await page2.setRequestInterception(true);
     page2.on('request', interceptedRequest => {
         if (interceptedRequest.isInterceptResolutionHandled()) return;
-        if (['stylesheet', 'font', 'script', 'image', 'video'].indexOf(interceptedRequest.resourceType()) !== -1)
+        if (['stylesheet', 'font', 'script', 'image', 'media'].indexOf(interceptedRequest.resourceType()) !== -1)
             interceptedRequest.abort();
         else {
             interceptedRequest.continue();
@@ -90,7 +90,7 @@ async function runWorker(worker, ids, index){
         const newWorker = new Worker({ ...worker[index], ...ids }, page, browser);
         const result = await newWorker.start();
         if(!result)
-            return await runWorker(worker, ids, index+1);
+            await runWorker(worker, ids, Math.floor(Math.random() * 5) + 1);
         console.log('Worker find slot successfully');
     } catch (error) {
         console.log('Error in runWorker:', error);
@@ -103,12 +103,14 @@ async function start() {
     const city = process.argv[2];
     const visaType = process.argv[3];
     const visaSubType = process.argv[4];
+    const type = process.argv[5] || 2;
     const ids = await getIds(city, visaType, visaSubType);
     const waitersFiltre = waiters.filter(x => x.center.toLowerCase().includes(city.toLowerCase()) && x.visaSubType.toLowerCase().includes(visaSubType.toLowerCase()));
+    const random = Math.floor(Math.random() * 5) + 1;
     try {
-        await runWorker(Workers, ids, 0);
-        waitersFiltre.forEach(async (waiter, index) => {
-            await runWaiter(waiter, ids, index);
+        await runWorker(Workers, ids, random);
+        waitersFiltre.forEach((waiter, index) => {
+            runWaiter(waiter, ids, index);
         });
     } catch (error) {
         console.log('Error in start:', error);
