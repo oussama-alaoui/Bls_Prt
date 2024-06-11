@@ -18,20 +18,20 @@ async function initBowser(index){
         headless: "new",
         args: [
             '--auto-open-devtools-for-tabs',
-            `--proxy-server=${newProxyUrl}`
+            // `--proxy-server=${newProxyUrl}`
         ]
     });
 
     const page = await browser.newPage();
     const page2 = await browser.newPage();
-    await page.authenticate({
-        username: '8ABBJGFziUOUDIJQ',
-        password: 'wifi;ma;;;'
-    });
-    await page2.authenticate({
-        username: '8ABBJGFziUOUDIJQ',
-        password: 'wifi;ma;;;'
-    });
+    // await page.authenticate({
+    //     username: '8ABBJGFziUOUDIJQ',
+    //     password: 'wifi;ma;;;'
+    // });
+    // await page2.authenticate({
+    //     username: '8ABBJGFziUOUDIJQ',
+    //     password: 'wifi;ma;;;'
+    // });
     await page.setRequestInterception(true);
     page.on('request', interceptedRequest => {
         if (interceptedRequest.isInterceptResolutionHandled()) return;

@@ -1,47 +1,9 @@
-Initiating browser: 56
-start process for WOrker:  6
-Getting data for login: 16:38:36
-Getting data for login: 16:38:39
-Login success for user:  6
-Slot available
-Worker find slot successfully
-Waiter started: 2
-Initiating browser: 200
-Waiter started: 3
-Initiating browser: 201
-Waiter started: 4
-Initiating browser: 202
-Waiter started: 5
-Initiating browser: 203
-Getting data for login: 16:38:49
-Getting data for login: 16:38:49
-Getting data for login: 16:38:50
-Getting data for login: 16:38:51
-Login success for user:  3
-Slot available
-Getting data for login: 16:39:02
-Login success for user:  2
-Login success for user:  4
-Slot available
-Login success for user:  5
-ya29.a0AXooCgvN4896OZrZvDngUVGRhywoxy2KrnWJjpDHFJLn8pHYGpMFW7M8BUvgLijEnC5GyYKT-Ut-5v_vCZ7UWWJ-CSPSb7q1xVhjVjmtbU6nd9Z_PDWKKOWa76SSVsxUrvHSiuN0xcvOVIgeJp2M1_RXxpeMBSnO0UrvMDpGLowaCgYKAbESARISFQHGX2MigldjP5BH5aDAn1TfFIZe5g0178
-ya29.a0AXooCgtLzHKBedxC5QVmckFrr78Nov-auVDp0nORrXI3d1UN4gdD3ky-T91VH8HzQ7eBw5UzvtDki5-mjreutqKPpcmWZWYvh4jyyDvIm9F0m23U-i8J3gXzqdxrgzqC1LmiFb99dS22PkgXMawEZbGyeTCUpGSxkIuPAfe5c5MaCgYKAbgSARISFQHGX2MiyZ5_AG8JL5mmM1DQeZlefg0178
-OTP inside getEmailContent:  '129251' date:  2024-06-07T15:39:06.000Z current_Date:  2024-06-07T15:39:15.638Z
-{}
-finished calendar
-Waiter task completed for id: 3 undefined
-Slot available
-ya29.a0AXooCgukxsjZefUbArsQMOJ0CDaDgFSgjUJZnOqKa-48r-HU7RXMkTqBRpcXGhzjxBVhxMN9EACy2BpoyvFeBw8NWuUE3mfX513NKH9SirQilcHspR91lGY8asR5grfEubCtMmA009ubhukuCXmYmNx-GTgH6C2dhfp0TQR3XC8aCgYKAYsSARISFQHGX2Mi64X22L0YLozLXZgR68Qn6A0178
-ya29.a0AXooCgto03ECZ_WQgrUlG5By0rfbIFUZrtHlvwvtaS0dCrbWuU9NyVlEGuvCCAqEe9BKWKSssoweZVOoq0XHA6FS83lZucmmGCx5ZBNIZTwqnl_dcf3cE3cYJtRT608SvzeKVYc1qsKh3UmBJCl4Dd-4DCgDUQTXSE7taxQ0OkQaCgYKAXgSARISFQHGX2Mil7sTEMm1OV--AQS0Dq6e4w0178
-OTP inside getEmailContent:  '832597' date:  2024-06-07T15:39:22.000Z current_Date:  2024-06-07T15:39:37.803Z
-{}
-finished calendar
-Waiter task completed for id: 2 undefined
-ya29.a0AXooCgv9gVqDfKs8mX8EtiLbg9EyCaFCm2kX8cbBSv7rKMgSLiE_geAjW4GtRs6D1RBF_QkNMPvtRdfPcY1-BsSHaVgPU_DwZ0xXlRICsdaopkzi-Fi2fh670ZwRFFoP18-HrRyiFNsdIE97ToSKaWMpb3NHDeQrHzWGTWp_vFsaCgYKAWMSARISFQHGX2MixOdIpbO8nZEqvT3sQG3gpQ0178
-ya29.a0AXooCguJkJangssEYSGTGOWnIaJX0h1TCqlAThnA6mUQuZTuX0aYlzd6wRzxsa1G9lxtLPqCe6iALGmqN03mZH8vjok8HXdjPvz0pMRf9aLhJajV9FO9AeKadI3aSoABjkikUBUmqvGF4xWXPWlGu21CSOXdm5rmJP7eSVMgLX4aCgYKAeMSARISFQHGX2MilYpzgNYM-x1ZvbYg5tr2BA0178
-OTP inside getEmailContent:  '626289' date:  2024-06-07T15:39:23.000Z current_Date:  2024-06-07T15:39:45.931Z
-Slot available
-{}
-finished calendar
-Waiter task completed for id: 4 undefined
-Waiter task completed for id: 5 undefined
+Initiating browser: 185
+start process for WOrker:  3
+Getting data for login: 11:16:57
+Initiating browser: 70
+Getting data for login: 11:17:09
+start process for WOrker:  5
+Getting data for login: 11:17:14
+Getting data for login: 11:17:16
+Getting data for login: 11:17:17
